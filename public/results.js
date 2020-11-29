@@ -25,7 +25,7 @@ function SurveyManager(baseUrl, accessKey) {
   });
   self.columns = ko.observableArray();
 
-  self.loadResults = function () {
+  self.loadResults = function (){
     var xhr = new XMLHttpRequest();
     xhr.open("GET", baseUrl + "/results?postId=" + self.surveyId);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");

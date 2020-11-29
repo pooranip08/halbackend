@@ -2,9 +2,11 @@ var express = require("express");
 var bodyParser = require("body-parser");
 var session = require("express-session");
 var dbadapter = require("./dbadapter");
-var inmemorydbadapter = require("./inmemorydbadapter");
+const cors = require('cors');
+// var inmemorydbadapter = require("./inmemorydbadapter");
 
 var app = express();
+app.use(cors())
 app.use(
   session({
     secret: "mysecret",
@@ -17,8 +19,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 function getDBAdapter(req) {
-  //var db = new dbadapter();
-  var db = new inmemorydbadapter(req.session);
+  var db = new dbadapter();
+  // var db = new inmemorydbadapter(req.session);
   return db;
 }
 
@@ -78,6 +80,7 @@ app.post("/post", function(req, res) {
 });
 
 app.get("/delete", function(req, res) {
+  debugger
   var db = getDBAdapter(req);
   var surveyId = req.query["id"];
   db.deleteSurvey(surveyId, function(result) {
@@ -95,6 +98,6 @@ app.get("/results", function(req, res) {
 
 app.use(express.static(__dirname + "/public"));
 
-app.listen(process.env.PORT || 3000, function() {
+app.listen(process.env.PORT || 3001, function() {
   console.log("Listening!");
 });
