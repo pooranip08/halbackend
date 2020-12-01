@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+
+
+/*@media (max-width: 600px) {
+  body {
+    font-family: 'Open Sans', sans-serif;
+    height: 70vh;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+}  */  
+
+body {
+  font-family: 'Open Sans', sans-serif;
+    height: 100vh;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.thank_main {
+    text-align: center;
+}
+
+.thank_main img.thankyou-img {
+    width: 40%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.thank_main {
+   /* background: #ffffff;*/
+    padding: 20px 15px;
+    /*box-shadow: 0px 0px 10px 0px #d6d6d6;*/
+  /*  margin-top: 130px;*/
+    border-radius: 5px;
+}
+
+.btn-schedule{
+    padding: 10px 25px;
+    border-radius: 25px;
+    margin-top: 10px;
+}
+
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-6 col-xs-12 col-md-offset-3">
+          <div class="thank_main">
+            <img class="thumb-img" src="https://i.ibb.co/zNNHK7y/thumb.png">
+            <br>
+            <!-- <img class="thankyou-img" src="580b585b2edbce24c47b24c5.png"> -->
+            <h1 style="font-weight: 600;"> You are Qualified   </h1>
+            <p> Lorem ipsum dollar site ameat dummy text..</p>
+            <button class="btn btn-success btn-schedule" data-toggle="modal" data-target="#schedule_form"> Schedule meeting </button>
+            
+          </div>
+            <img class="thankyou-img" src="https://i.ibb.co/fHcbgTW/image-2020-11-12-T13-27-53-965-Z.png"> 
+      </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="schedule_form" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <form method="POST" action="http://127.0.0.1:8000/meetings/" >
+        {% csrf_token %}
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title text-center">Schedule Meeting </h4>
+          </div>
+          <div class="modal-body">
+            <div class="col-md-10 col-md-offset-1">
+              <div class="time_form_main">
+              
+                  <div class="form-group">
+                    <label for="birthday">Full Name:</label>
+                    <input class="form-control" type="text" id="full_name" name="full_name">
+                  </div>
+                  <div class="form-group">
+                    <label for="birthday">Email:</label>
+                    <input class="form-control" type="email" id="email" name="email">
+                  </div>
+                  <div class="form-group">
+                    <label for="birthday">Address:</label>
+                    <input class="form-control" type="text" id="address" name="address">
+                  </div>
+                  <div class="form-group">
+                    <label for="birthday">Contact:</label>
+                    <input class="form-control" type="text" id="contact" name="contact">
+                  </div>
+                  <div class="form-group">
+                    <label for="sel1">Time Slot:</label>
+                    <select name="time_slot" class="form-control" id="sel1">
+                      <option> 10am to 1pm </option>
+                      <option>2pm to 5pm</option>
+                      <option>6pm to 9pm</option>
+                    </select>
+
+                  </div>
+
+                  <div class="form-group">
+                    <label for="birthday">Meeting date:</label>
+                    <input class="form-control date-input" id="date" type="date" min="1997-01-01" max="2030-12-31" id="birthday" name="meeting_date">
+                  </div>
+               
+
+              </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="modal-footer text-center">
+              <button type="submit" class="btn btn-primary">Schedule Meeting</button>
+            </div>
+            
+          </div>
+
+        </div>
+    </form>
+    </div>
+
+    
+</body>
+</html>

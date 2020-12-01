@@ -4,11 +4,13 @@ CREATE TABLE public.surveys
 (
     id uuid NOT NULL DEFAULT uuid_generate_v1(),
     name text COLLATE pg_catalog."default",
-    json text COLLATE pg_catalog."default"
+    json text COLLATE pg_catalog."default",
+    available BOOLEAN DEFAULT FALSE
 )
 WITH (
     OIDS = FALSE
 )
+
 TABLESPACE pg_default;
 
 ALTER TABLE public.surveys

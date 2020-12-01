@@ -1,12 +1,15 @@
 var pgp = require("pg-promise")(/*options*/);
 
 function PostgresDBAdapter() {
-  var db = pgp(process.env.DATABASE_URL || "postgres://postgres:123456@localhost:5432/surveyjs");
+  var db = pgp(
+    process.env.DATABASE_URL ||
+      "postgres://postgres:123456@localhost:5432/surveyjs"
+  );
 
   function getObjectFromStorage(tableName, callback) {
-    db.any("SELECT * FROM " + tableName).then(function(result) {
+    db.any("SELECT * FROM " + tableName).then(function (result) {
       var objects = {};
-      (result || []).forEach(function(item) {
+      (result || []).forEach(function (item) {
         objects[item.id] = item;
       });
       callback(objects);
@@ -14,52 +17,63 @@ function PostgresDBAdapter() {
   }
 
   function addSurvey(name, callback) {
-    db
-      .one("INSERT INTO surveys (name, json) VALUES($1, $2) RETURNING *", [
-        name,
-        "{}"
-      ])
-      .then(callback);
+    db.one("INSERT INTO surveys (name, json) VALUES($1, $2) RETURNING *", [
+      name,
+      "{}",
+    ]).then(callback);
   }
 
   function postResults(postId, json, callback) {
-    db
-      .one("INSERT INTO results (postid, json) VALUES($1, $2) RETURNING *", [
-        postId,
-        json
-      ])
-      .then(callback);
+    db.one("INSERT INTO results (postid, json) VALUES($1, $2) RETURNING *", [
+      postId,
+      json,
+    ]).then(callback);
   }
 
   function getResults(postId, callback) {
-    db
-      .any("SELECT * FROM results WHERE postid=$1", [postId])
-      .then(function(data) {
-        //console.log(JSON.stringify(data));
-        var results = (data || []).map(function(item) {
-          return item["json"];
-        });
-        callback(results);
+    db.any("SELECT * FROM results WHERE postid=$1", [postId]).then(function (
+      data
+    ) {
+      //console.log(JSON.stringify(data));
+      var results = (data || []).map(function (item) {
+        return item["json"];
       });
+      callback(results);
+    });
   }
 
   function deleteSurvey(surveyId, callback) {
-    db
-      .one("DELETE FROM surveys WHERE id=$1 RETURNING *", [surveyId])
-      .then(callback);
+    db.one("DELETE FROM surveys WHERE id=$1 RETURNING *", [surveyId]).then(
+      callback
+    );
+  }
+
+  function updateSurvey(id, callback) {
+    console.log(id);
+    db.any("UPDATE surveys SET available = FALSE WHERE id <> $1", [id]).then(
+      (data) => {
+        db.one(
+          "UPDATE surveys SET available = TRUE WHERE id = $1 RETURNING *",
+          [id]
+        ).then(callback);
+        // callback();
+      }
+    );
   }
 
   function changeName(id, name, callback) {
-    console.log("THIS IS THE NAME: "+name+ " ID: "+id);
-    db
-      .one("UPDATE surveys SET name = $1 WHERE id = $2 RETURNING *", [name, id])
-      .then(callback);
+    console.log("THIS IS THE NAME: " + name + " ID: " + id);
+    db.one("UPDATE surveys SET name = $1 WHERE id = $2 RETURNING *", [
+      name,
+      id,
+    ]).then(callback);
   }
 
   function storeSurvey(id, json, callback) {
-    db
-      .one("UPDATE surveys SET json = $1 WHERE id = $2 RETURNING *", [json, id])
-      .then(callback);
+    db.one("UPDATE surveys SET json = $1 WHERE id = $2 RETURNING *", [
+      json,
+      id,
+    ]).then(callback);
   }
 
   function getSurveys(callback) {
@@ -72,11 +86,11 @@ function PostgresDBAdapter() {
               {
                 type: "radiogroup",
                 choices: ["item1", "item2", "item3"],
-                name: "question from survey1"
-              }
-            ]
-          }
-        ]
+                name: "question from survey1",
+              },
+            ],
+          },
+        ],
       },
       MySurvey2: {
         pages: [
@@ -86,14 +100,14 @@ function PostgresDBAdapter() {
               {
                 type: "checkbox",
                 choices: ["item1", "item2", "item3"],
-                name: "question from survey2"
-              }
-            ]
-          }
-        ]
-      }
+                name: "question from survey2",
+              },
+            ],
+          },
+        ],
+      },
     };
-    getObjectFromStorage("surveys", function(objects) {
+    getObjectFromStorage("surveys", function (objects) {
       if (Object.keys(objects).length > 0) {
         callback(objects);
       } else {
@@ -111,8 +125,8 @@ function PostgresDBAdapter() {
 
   return {
     addSurvey: addSurvey,
-    getSurvey: function(surveyId, callback) {
-      getSurveys(function(result) {
+    getSurvey: function (surveyId, callback) {
+      getSurveys(function (result) {
         callback(JSON.parse(result[surveyId].json));
       });
     },
@@ -121,7 +135,8 @@ function PostgresDBAdapter() {
     deleteSurvey: deleteSurvey,
     postResults: postResults,
     getResults: getResults,
-    changeName: changeName
+    changeName: changeName,
+    updateSurvey: updateSurvey,
   };
 }
 
