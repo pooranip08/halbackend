@@ -29,3 +29,14 @@ TABLESPACE pg_default;
 
 ALTER TABLE public.results
     OWNER to postgres;
+
+CREATE TABLE public.files(
+    id uuid NOT NULL DEFAULT uuid_generate_v1(),
+    name text COLLATE pg_catalog."default",
+    email text COLLATE pg_catalog."default"
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.results
+    OWNER to postgres;

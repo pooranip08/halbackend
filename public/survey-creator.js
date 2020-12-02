@@ -70,6 +70,21 @@ surveyCreator.saveSurveyFunc = function (saveNo, callback) {
   console.log(surveyCreator.text);
   let tempContent = JSON.parse(surveyCreator.text);
   tempContent["navigateToUrl"] = `${window.location.origin}/thankyou.html`;
+  tempContent["pages"] = tempContent["pages"].map((ite) => {
+    console.log(ite["elements"]);
+    ite["elements"] = ite["elements"].map((item) => {
+      if (item.type == "file") {
+        item = {
+          ...item,
+          storeDataAsText: false,
+          allowMultiple: true,
+        };
+      }
+      return item;
+    });
+
+    return ite;
+  });
 
   xhr.send(
     JSON.stringify({

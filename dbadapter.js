@@ -22,14 +22,6 @@ function PostgresDBAdapter() {
       "{}",
     ]).then(callback);
   }
-
-  function postResults(postId, json, callback) {
-    db.one("INSERT INTO results (postid, json) VALUES($1, $2) RETURNING *", [
-      postId,
-      json,
-    ]).then(callback);
-  }
-
   function getResults(postId, callback) {
     db.any("SELECT * FROM results WHERE postid=$1", [postId]).then(function (
       data
@@ -39,6 +31,33 @@ function PostgresDBAdapter() {
         return item["json"];
       });
       callback(results);
+    });
+  }
+
+  function postResults(postId, json, callback) {
+    db.one("INSERT INTO results (postid, json) VALUES($1, $2) RETURNING *", [
+      postId,
+      json,
+    ]).then(callback);
+  }
+
+  function addImage(name, email, callback) {
+    db.one("INSERT INTO files (name, email) VALUES($1, $2) RETURNING *", [
+      name,
+      email,
+    ]).then(callback);
+  }
+
+  function addImage(name, email, callback) {
+    db.one("INSERT INTO files (name, email) VALUES($1, $2) RETURNING *", [
+      name,
+      email,
+    ]).then(callback);
+  }
+
+  function getImages(callback) {
+    db.any("SELECT * FROM files ").then(function (data) {
+      callback(data);
     });
   }
 
@@ -131,6 +150,8 @@ function PostgresDBAdapter() {
       });
     },
     storeSurvey: storeSurvey,
+    addImage: addImage,
+    getImages: getImages,
     getSurveys: getSurveys,
     deleteSurvey: deleteSurvey,
     postResults: postResults,

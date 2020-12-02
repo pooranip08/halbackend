@@ -1,7 +1,9 @@
 var express = require("express");
-var bodyParser = require("body-parser");
 var session = require("express-session");
 var dbadapter = require("./dbadapter");
+const fileUpload = require("express-fileupload");
+var bodyParser = require("body-parser");
+const path = require("path");
 const cors = require("cors");
 // var inmemorydbadapter = require("./inmemorydbadapter");
 
@@ -15,8 +17,23 @@ app.use(
     //cookie: { secure: true }
   })
 );
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+
+// app.use(express.urlencoded({ extended: false, limit: "100mb" }));
+// app.use(express.json({ extended: false, limit: "100mb" }));
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: "/tmp/",
+  })
+);
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(
+  bodyParser.urlencoded({
+    parameterLimit: 100000,
+    extended: false,
+    limit: "50mb",
+  })
+);
 
 function getDBAdapter(req) {
   var db = new dbadapter();
@@ -63,10 +80,39 @@ app.get("/create", function (req, res) {
 
 app.post("/changeJson", function (req, res) {
   var db = getDBAdapter(req);
+
   var id = req.body.Id;
   var json = req.body.Json;
   db.storeSurvey(id, json, function (result) {
     sendJsonResult(res, result.json);
+  });
+});
+
+app.post("/uploadFile", function (req, res) {
+  var db = getDBAdapter(req);
+
+  const fileNames = Object.keys(req.files);
+  fileNames.map((item) => {
+    req.files[item].mv(
+      path.join(__dirname, `./public/${req.files[item].name}`)
+    );
+    db.addImage(req.files[item].name, req.body.email, function (result) {});
+  });
+
+  return res.json(
+    fileNames.map((item) => {
+      return {
+        url: `http://localhost:3001/${req.files[item].name}`,
+      };
+    })
+  );
+});
+
+app.get("/getImages", function (req, res) {
+  var db = getDBAdapter(req);
+
+  db.getImages(function (result) {
+    sendJsonResult(res, result);
   });
 });
 
@@ -93,6 +139,7 @@ app.get("/update", function (req, res) {
   var db = getDBAdapter(req);
   var surveyId = req.query["id"];
   console.log(surveyId);
+
   db.updateSurvey(surveyId, function (result) {
     sendJsonResult(res, {});
   });
