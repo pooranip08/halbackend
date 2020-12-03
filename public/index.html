@@ -35,13 +35,14 @@
           <div id="surveys-list" class="surveys-list">
             <section>
               <img src="/hal-logo.png" class="img-fluid float-right" alt="" />
-
-              <button
-                style="display: block; margin-top: 20px"
-                data-bind="click: function() { createSurvey('NewSurvey' + Date.now(), loadSurveys); }"
-              >
-                Add
-              </button>
+              <table style="height: 11px; width: 364px;">
+                <tbody>
+                <tr>
+                <td style="width: 207px;"><button style="display: block; margin-top: 20px;" data-bind="click: function() { createSurvey('NewSurvey' + Date.now(), loadSurveys); }"> Add</button></td>
+                <td style="width: 300px;"><button style="display: block; margin-top: 20px;" onclick="window.location.href='https://surveyjsbackend.herokuapp.com/files.html'">View uploaded files</button></td>
+                </tr>
+                </tbody>
+              </table>              
             </section>
 
             <table class="table table-striped">
