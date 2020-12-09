@@ -3,7 +3,7 @@ var pgp = require("pg-promise")(/*options*/);
 function PostgresDBAdapter() {
   var db = pgp(
     process.env.DATABASE_URL ||
-      "postgres://postgres:123456@localhost:5432/surveyjs"
+      "postgres://hoalvaiuiinzfz:fb0ef388ce38a3145f7eebe4722223000293e22c087f3ad9998e2b402c8f1ae3@ec2-18-233-207-22.compute-1.amazonaws.com:5432/df0b9kkga3b512"
   );
 
   function getObjectFromStorage(tableName, callback) {
